@@ -1,0 +1,34 @@
+model:
+  image_size: 32
+  latent_dim: 128
+  latent_spatial: 4       # 4x4 spatial latent
+  encoder_channels: [64, 128, 256]
+  prior_depth: 6
+  prior_heads: 8
+  decoder_depth: 6
+  decoder_heads: 8
+
+noise:
+  min_log_snr: -10.0      # lambda_min
+  max_log_snr: 10.0       # lambda_max (paper uses ~5 for prior minimum)
+  sigma_0: 0.1            # fixed noise added by encoder at t=0
+
+training:
+  batch_size: 64
+  lr: 1e-4
+  weight_decay: 1e-2
+  stage1_epochs: 100
+  stage2_epochs: 50
+  grad_clip: 1.0
+  device: cuda             # change to cuda on Colab
+
+data:
+  dataset: cifar10
+  data_dir: ./data
+  num_workers: 4
+  pin_memory: true        # set true for cuda
+
+logging:
+  log_every: 100
+  save_every: 10
+  output_dir: ./outputs
