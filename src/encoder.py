@@ -49,8 +49,8 @@ class NoiseSchedulePredictor(nn.Module):
     def forward(self, x):
         h = self.avg_pool(x).flatten(1)
         h = self.net(h)
-        # Constrain to [2, 8]
-        return 2.0 + 6.0 * torch.sigmoid(h)
+        # Constrain to [2, 8] and flatten to (B,) for broadcasting
+        return (2.0 + 6.0 * torch.sigmoid(h)).view(-1)
 
 
 class Encoder(nn.Module):
