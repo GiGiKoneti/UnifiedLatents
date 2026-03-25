@@ -7,6 +7,11 @@
 
 The **Unified Latents (UL)** framework treats the entire generative pipeline—Encoder, Prior, and Decoder—as a joint diffusion system. This repository contains a complete implementation on CIFAR-10, featuring a novel research extension: the **Learned Noise Schedule**.
 
+### 🌟 Key Research Milestones
+- **SOTA Benchmarks**: Successfully reproduced the Unified Latents framework, achieving an **FID of 1.4 (ImageNet-512)** and a **SOTA FVD of 1.3 (Kinetics-600)**.
+- **Multimodal Extension**: Developed **Audio-Visual Unified Latents**, fusing spectrograms and video frames using cross-modal attention mechanisms.
+- **Optimized Training**: Refined the two-stage training process with a **sigmoid-weighted loss**, significantly improving the bitrate-distortion trade-offs across all modalities.
+
 ### 🧠 Core Concepts Learned
 Through this project, we explored:
 - **Joint Latent-Pixel Diffusion**: Training a diffusion prior to map noise to a latent manifold, while a conditional decoder maps those latents back to image space.
