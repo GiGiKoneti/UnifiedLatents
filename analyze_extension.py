@@ -51,5 +51,10 @@ def analyze_noise_schedule(ckpt_path, config_path):
     print("Saved histogram to outputs/lambda_dist.png")
 
 if __name__ == "__main__":
-    # Change CKPT to your latest one
-    analyze_noise_schedule("outputs/ckpt_stage1_epoch28.pt", "configs/config_cifar10.yaml")
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--ckpt', type=str, required=True, help='Path to Stage 1 checkpoint')
+    parser.add_argument('--config', default='configs/config_cifar10.yaml', help='Path to config file')
+    args = parser.parse_args()
+
+    analyze_noise_schedule(args.ckpt, args.config)
