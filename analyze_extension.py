@@ -2,10 +2,17 @@ import torch
 import torch.nn as nn
 import matplotlib.pyplot as plt
 import yaml
+import os
 from src.encoder import Encoder
 from src.data import get_cifar10_loaders
 
 def analyze_noise_schedule(ckpt_path, config_path):
+    print(f"Current working directory: {os.getcwd()}")
+    if not os.path.exists(ckpt_path):
+        print(f"❌ Error: Checkpoint NOT FOUND at: {os.path.abspath(ckpt_path)}")
+        print("Please check your 'outputs/' folder in Colab.")
+        return
+    
     with open(config_path) as f:
         config = yaml.safe_load(f)
     
