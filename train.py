@@ -50,12 +50,18 @@ def train(config: dict, stage: int = 1, smoke_test: bool = False):
         n_heads=config['model']['decoder_heads']
     ).to(device)
 
-    # Load Stage 1 weights if in Stage 2
-    if stage == 2:
-        ckpt_path = f"{config['logging']['output_dir']}/ckpt_stage1_final.pt"
-        if os.path.exists(ckpt_path):
-            print(f"Loading Stage 1 weights from {ckpt_path}")
-            ckpt = torch.load(ckpt_path, map_location=device)
+    # Load weights if provided or if in Stage 2
+    if config.get('ckpt_path'):
+        print(f"Loading weights from {config['ckpt_path']}")
+        ckpt = torch.load(config['ckpt_path'], map_location=device)
+        encoder.load_state_dict(ckpt['encoder'])
+        prior.load_state_dict(ckpt['prior'])
+        decoder.load_state_dict(ckpt['decoder'])
+    elif stage == 2:
+        default_ckpt = f"{config['logging']['output_dir']}/ckpt_stage1_final.pt"
+        if os.path.exists(default_ckpt):
+            print(f"Loading default Stage 1 weights from {default_ckpt}")
+            ckpt = torch.load(default_ckpt, map_location=device)
             encoder.load_state_dict(ckpt['encoder'])
             prior.load_state_dict(ckpt['prior'])
             decoder.load_state_dict(ckpt['decoder'])
@@ -175,6 +181,7 @@ if __name__ == '__main__':
     parser.add_argument('--stage', type=int, default=1)
     parser.add_argument('--smoke-test', action='store_true')
     parser.add_argument('--use-learned-schedule', action='store_true', help='Extension: Use trainable lambda_0')
+    parser.add_argument('--ckpt', type=str, help='Path to load checkpoint')
     args = parser.parse_args()
 
     with open(args.config) as f:
@@ -182,6 +189,8 @@ if __name__ == '__main__':
     
     if args.use_learned_schedule:
         config['training']['use_learned_schedule'] = True
+    if args.ckpt:
+        config['ckpt_path'] = args.ckpt
 
     os.makedirs(config['logging']['output_dir'], exist_ok=True)
     train(config, stage=args.stage, smoke_test=args.smoke_test)
